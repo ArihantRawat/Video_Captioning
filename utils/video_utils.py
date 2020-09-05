@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # %%
 
 
-def extract_frame_from_video(filename, num_of_frames):
+def extract_frames(filename, num_of_frames):
     videodata = skvideo.io.vread(filename,)
     total_frames = videodata.shape[0]
     sequence = np.linspace(
@@ -16,7 +16,8 @@ def extract_frame_from_video(filename, num_of_frames):
 
 
 # %%
-extract_frame_from_video(
+data = extract_frames(
     '..\\dataset\\YouTubeClips\\_0nX-El-ySo_83_93.avi', 15)
+print(data.shape)
 
 # %%
