@@ -1,12 +1,12 @@
 # %%
 
-from tensorflow.keras.applications.xception import Xception
-import tensorflow as tf
-from tensorflow.keras.utils import plot_model
-from tensorflow.keras.layers import *
-from tensorflow.keras import Model
 import numpy as np
-import pydotplus
+from tensorflow.keras import Model
+from tensorflow.keras.utils import plot_model
+from tensorflow.keras.layers import Input, LSTM, Embedding, Dense
+
+# %%
+
 # %%
 lstm_units = 500
 encoder_input_size = 4096
@@ -56,6 +56,8 @@ validation_batch_size = 128
 
 model.fit(x=[eng_padded], y=target_padded, batch_size=batch_size, epochs=epochs,
           validation_split=validation_split, validation_batch_size=validation_batch_size)
+
+# %%
 
 # %%inference model
 

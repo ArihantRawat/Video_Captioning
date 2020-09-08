@@ -2,8 +2,9 @@ import csv
 import os
 
 rowData = []
-path = os.path.dirname(os.getcwd())
-with open(path+'/dataset/MSR Video Description Corpus.csv', 'r', encoding="utf8") as file:
+path = os.getcwd()
+print(path)
+with open(path + '/dataset/MSR Video Description Corpus.csv', 'r', encoding='utf8') as file:
     reader = csv.reader(file)
     for row in reader:
         tempRow = []
