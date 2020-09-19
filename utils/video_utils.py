@@ -1,4 +1,4 @@
-#%%
+# %%
 from tensorflow.keras import Model
 from tensorflow.keras.applications.vgg16 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -13,9 +13,10 @@ import skvideo
 # skvideo.setFFmpegPath('D:\\data\\ffmpeg-20200831-4a11a6f-win64-shared\\bin')
 
 dir_path = os.path.dirname(os.getcwd())
-video_path = os.path.join(dir_path,'dataset','YoutubeClips-small')
-print(dir_path,'\n',video_path)
-#%%
+video_path = os.path.join(dir_path, 'dataset', 'YoutubeClips-small')
+print(dir_path, '\n', video_path)
+# %%
+
 
 def extract_frames_from_video(filename, num_of_frames):
     videodata = skvideo.io.vread(filename,)
@@ -29,7 +30,7 @@ def extract_frames_from_video(filename, num_of_frames):
 def create_model():
     model = VGG16()
     model.layers.pop()
-    model = Model(inputs=model.input, outputs=model.layers[-1].output)
+    model = Model(inputs=model.input, outputs=model.layers[-2].output)
     print(model.summary)
     return model
 
