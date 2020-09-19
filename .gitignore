@@ -2,3 +2,4 @@ dataset/glove.6B.100d.txt
 .vscode/settings.json
 dataset/YoutubeClips/*
 dataset/YoutubeClips-small/*
+features-*/*
