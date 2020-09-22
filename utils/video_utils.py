@@ -1,7 +1,8 @@
-from keras.models import Model
-from keras.applications.vgg16 import preprocess_input
-from keras.preprocessing.image import img_to_array
-from keras.applications.vgg16 import VGG16
+#%%
+from tensorflow.keras import Model
+from tensorflow.keras.applications.vgg16 import preprocess_input
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.applications.vgg16 import VGG16
 import numpy as np
 from os import listdir
 from pickle import dump
@@ -9,11 +10,12 @@ import cv2
 import os
 import skvideo.io
 import skvideo
-skvideo.setFFmpegPath('D:\\data\\ffmpeg-20200831-4a11a6f-win64-shared\\bin')
+# skvideo.setFFmpegPath('D:\\data\\ffmpeg-20200831-4a11a6f-win64-shared\\bin')
 
 dir_path = os.path.dirname(os.getcwd())
-video_path = dir_path+'/dataset/YoutubeClips'
-
+video_path = os.path.join(dir_path,'dataset','YoutubeClips-small')
+print(dir_path,'\n',video_path)
+#%%
 
 def extract_frames_from_video(filename, num_of_frames):
     videodata = skvideo.io.vread(filename,)
@@ -51,7 +53,7 @@ def extract_features_from_video(video, name, model):
 
 size = 10
 i = 1
-feature_path = os.path.join(dir_path, 'features')
+feature_path = os.path.join(dir_path, 'features-small')
 if not os.path.exists(feature_path):
     os.mkdir(feature_path)
 
