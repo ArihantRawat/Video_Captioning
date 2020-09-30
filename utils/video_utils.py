@@ -1,4 +1,3 @@
-#%%
 from tensorflow.keras import Model
 from tensorflow.keras.applications.vgg16 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -8,14 +7,11 @@ from os import listdir
 from pickle import dump
 import cv2
 import os
-import skvideo.io
 import skvideo
+import skvideo.io
+from tqdm import tqdm
 # skvideo.setFFmpegPath('D:\\data\\ffmpeg-20200831-4a11a6f-win64-shared\\bin')
 
-dir_path = os.path.dirname(os.getcwd())
-video_path = os.path.join(dir_path,'dataset','YoutubeClips-small')
-print(dir_path,'\n',video_path)
-#%%
 
 def extract_frames_from_video(filename, num_of_frames):
     videodata = skvideo.io.vread(filename,)
@@ -29,13 +25,13 @@ def extract_frames_from_video(filename, num_of_frames):
 def create_model():
     model = VGG16()
     model.layers.pop()
-    model = Model(inputs=model.input, outputs=model.layers[-1].output)
-    print(model.summary)
+    model = Model(inputs=model.input, outputs=model.layers[-2].output)
+    # print(model.summary)
     return model
 
 
 def extract_features_from_video(video, name, model):
-    features = dict()
+    features = []
     i = 0
     for frame in video:
         image = img_to_array(frame)
@@ -45,24 +41,26 @@ def extract_features_from_video(video, name, model):
             (1, image.shape[0], image.shape[1], image.shape[2]))
         image = preprocess_input(image)
         feature = model.predict(image, verbose=0)
-        features[i] = feature
-        print('>%s %s' % (name, i+1))
+        features.append(feature.ravel())
+        # print('>%s %s' % (name, i+1))
         i = i+1
+    features = np.array(features)
     return features
 
 
-size = 10
-i = 1
-feature_path = os.path.join(dir_path, 'features-small')
+dir_path = os.getcwd()
+video_path = os.path.join(dir_path, 'dataset', 'YoutubeClips-small-test')
+video_list = os.listdir(video_path)
+feature_path = os.path.join(dir_path, 'dataset', 'features-small-test')
 if not os.path.exists(feature_path):
     os.mkdir(feature_path)
+print(os.path.exists(feature_path))
 
 model = create_model()
-for name in listdir(video_path):
-    if i > size:
-        break
+for i in tqdm(range(len(video_list)), 'Processing videos'):
+    name = video_list[i]
+
     data = extract_frames_from_video(os.path.join(video_path, name), 20)
     features = extract_features_from_video(data, name, model)
     dump(features, open(os.path.join(
         feature_path, name.split('.')[0]+'.pkl'), 'wb'))
-    i = i + 1
