@@ -8,9 +8,9 @@ from pickle import dump
 import cv2
 import os
 import skvideo
+skvideo.setFFmpegPath('D:\\data\\ffmpeg-20200831-4a11a6f-win64-shared\\bin')
 import skvideo.io
 from tqdm import tqdm
-# skvideo.setFFmpegPath('D:\\data\\ffmpeg-20200831-4a11a6f-win64-shared\\bin')
 
 
 def extract_frames_from_video(filename, num_of_frames):
@@ -26,7 +26,7 @@ def create_model():
     model = VGG16()
     model.layers.pop()
     model = Model(inputs=model.input, outputs=model.layers[-2].output)
-    # print(model.summary)
+    print(model.summary)
     return model
 
 
@@ -49,9 +49,9 @@ def extract_features_from_video(video, name, model):
 
 
 dir_path = os.getcwd()
-video_path = os.path.join(dir_path, 'dataset', 'YoutubeClips-small-test')
+video_path = os.path.join(dir_path, 'dataset', 'YoutubeClips-small-train')
 video_list = os.listdir(video_path)
-feature_path = os.path.join(dir_path, 'dataset', 'features-small-test')
+feature_path = os.path.join(dir_path, 'dataset', 'features-small-train')
 if not os.path.exists(feature_path):
     os.mkdir(feature_path)
 print(os.path.exists(feature_path))
