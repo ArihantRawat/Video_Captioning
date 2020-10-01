@@ -2,3 +2,5 @@ dataset/glove.6B.100d.txt
 .vscode/settings.json
 dataset/YoutubeClips*/*
 dataset/features*/*
+dataset/MSVD_test-small.csv
+dataset/MSVD_train-small.csv

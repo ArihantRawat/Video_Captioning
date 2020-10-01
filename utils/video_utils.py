@@ -49,9 +49,9 @@ def extract_features_from_video(video, name, model):
 
 
 dir_path = os.getcwd()
-video_path = os.path.join(dir_path, 'dataset', 'YoutubeClips-small-test')
+video_path = os.path.join(dir_path, 'dataset', 'YoutubeClips-small-train')
 video_list = os.listdir(video_path)
-feature_path = os.path.join(dir_path, 'dataset', 'features-small-test')
+feature_path = os.path.join(dir_path, 'dataset', 'features-small-train')
 if not os.path.exists(feature_path):
     os.mkdir(feature_path)
 print(os.path.exists(feature_path))
