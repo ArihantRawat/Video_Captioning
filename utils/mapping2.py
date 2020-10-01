@@ -3,18 +3,35 @@ from pickle import load
 import os
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tqdm import tqdm
+
+
+def load_all_features(feature_src):
+    features = []
+    vid_ids = []
+    file_list = os.listdir(feature_src)
+    for i in tqdm(range(len(file_list)), 'Loading Features...'):
+        name = file_list[i]
+        # load video
+        vid = load(
+            open(os.path.join(feature_src, name), 'rb'))
+        features.append(vid)
+        vid_ids.append(name.split('.')[0])
+    features = np.array(features)
+    return features, vid_ids
 
 
 def create_dataset(feature_src, data_src):
     sent = []
     features = []
     data = open(data_src, encoding='utf-8').read().split('\n')
-    for name in data:
-        toks = name.split()
+    for i in tqdm(range(1, len(data)), 'Creating Dataset...'):
+        toks = data[i].split(',')
         # load video
-        vid = load(open(os.path.join(feature_src, toks[0]+'.pkl'), 'rb'))
+        vid = load(
+            open(os.path.join(feature_src, toks[0].split('.')[0]+'.pkl'), 'rb'))
         features.append(vid)
-        sent.append(['\t']+toks[1:]+['\n'])
+        sent.append(['\t']+toks[1].split()+['\n'])
     features = np.array(features)
 
     max_len = max([len(s) for s in sent])
@@ -30,9 +47,13 @@ def create_dataset(feature_src, data_src):
 
 def create_embedding_matrix(glove_src, word_index, vocab_size, embd_size):
     vecs = {}
-    for line in open(glove_src, encoding='utf-8'):
+    lines = open(glove_src, encoding='utf-8').read().split('\n')
+    for i in tqdm(range(len(lines)), 'Loading Word Embeddings....'):
+        line = lines[i]
         toks = line.split()
-        vecs[toks[0]] = np.array([float(toks[i]) for i in range(1, len(toks))])
+        if len(toks) > 1:
+            vecs[toks[0]] = np.array([float(toks[i])
+                                      for i in range(1, len(toks))])
     print(vecs['hello'][:20])
 
     embd_matrix = np.zeros((vocab_size+1, embd_size))
