@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 
 def extract_frames_from_video(filename, num_of_frames):
-    videodata = skvideo.io.vread(filename,)
+    videodata = skvideo.io.vread(filename)
     total_frames = videodata.shape[0]
     sequence = np.linspace(
         0, total_frames, num_of_frames, False, dtype=np.int32)
@@ -59,7 +59,6 @@ print(os.path.exists(feature_path))
 model = create_model()
 for i in tqdm(range(len(video_list)), 'Processing videos'):
     name = video_list[i]
-
     data = extract_frames_from_video(os.path.join(video_path, name), 20)
     features = extract_features_from_video(data, name, model)
     dump(features, open(os.path.join(

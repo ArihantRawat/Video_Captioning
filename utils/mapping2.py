@@ -55,7 +55,7 @@ def create_embedding_matrix(glove_src, word_index, vocab_size, embd_size):
             vecs[toks[0]] = np.array([float(toks[i])
                                       for i in range(1, len(toks))])
     print(vecs['hello'][:20])
-
+    print(len(vecs))
     embd_matrix = np.zeros((vocab_size+1, embd_size))
     random_vec = np.ones((embd_size,))*0.1
     c = 0
