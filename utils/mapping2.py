@@ -21,17 +21,53 @@ def load_all_features(feature_src):
     return features, vid_ids
 
 
+def create_test_dataset(feature_src, data_src):
+    sent = []
+    features = []
+    vid_ids = []
+    data = open(data_src, encoding='utf-8').read().split('\n')
+
+    prev_id = ""
+
+    for i in tqdm(range(1, len(data)), 'Creating Test Dataset...'):
+        toks = data[i].split(',')
+        if prev_id == toks[0]:
+            continue
+        prev_id = toks[0]
+        # load video
+        vid = load(
+            open(os.path.join(feature_src, toks[0].split('.')[0]+'.pkl'), 'rb'))
+        features.append(vid)
+        sent.append(toks[1].split()+['\n'])
+        vid_ids.append(toks[0])
+    features = np.array(features)
+    return features, sent, vid_ids
+
+
+# path = os.getcwd()
+# print(path)
+
+# feature_src = os.path.join(path, 'dataset', 'features-small-test')
+# data_src = os.path.join(path, 'dataset', 'MSVD_test-small.csv')
+
+# qq, sent, vid_ids = create_test_dataset(feature_src, data_src)
+
+# print(len(sent), len(vid_ids), qq.shape)
+
+
 def create_dataset(feature_src, data_src):
     sent = []
     features = []
+    vid_ids = []
     data = open(data_src, encoding='utf-8').read().split('\n')
-    for i in tqdm(range(1, len(data)), 'Creating Dataset...'):
+    for i in tqdm(range(1, len(data)), 'Creating Train Dataset...'):
         toks = data[i].split(',')
         # load video
         vid = load(
             open(os.path.join(feature_src, toks[0].split('.')[0]+'.pkl'), 'rb'))
         features.append(vid)
         sent.append(['\t']+toks[1].split()+['\n'])
+        vid_ids.append(toks[0])
     features = np.array(features)
 
     max_len = max([len(s) for s in sent])
@@ -42,7 +78,7 @@ def create_dataset(feature_src, data_src):
     target_padded = np.zeros(padded.shape)
     for i in range(padded.shape[0]):
         target_padded[i, :-1] = padded[i, 1:]
-    return features, padded, target_padded, tokenizer, max_len
+    return features, padded, target_padded, tokenizer, max_len, vid_ids
 
 
 def create_embedding_matrix(glove_src, word_index, vocab_size, embd_size):

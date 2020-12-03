@@ -4,3 +4,5 @@ dataset/YoutubeClips*/*
 dataset/features*/*
 dataset/MSVD_test-small.csv
 dataset/MSVD_train-small.csv
+.*
+utils/_*
